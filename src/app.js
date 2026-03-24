@@ -1,8 +1,14 @@
 const express = require('express');
+const pool = require('./config/db');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+pool?.query('SELECT NOW()', (error, response) => {
+  if (error) console.error(`Error connecting to database ${process.env.DATABASE_NAME}`, error.stack)
 
+  console.log(`Connected to database ${process.env.DATABASE_NAME}`, response?.rows?.[0].now)
+})
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
