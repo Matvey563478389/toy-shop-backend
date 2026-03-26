@@ -1,5 +1,7 @@
 const express = require('express');
 const pool = require('./config/db');
+const router = require('./routes/index')
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,6 +13,8 @@ if (pool?.query) {
     console.log(`Connected to database ${process.env.DATABASE_NAME}`, response?.rows?.[0].now)
   })
 }
+
+app.use(router)
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
