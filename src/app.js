@@ -13,6 +13,7 @@ if (pool?.query) {
     console.log(`Connected to database ${process.env.DATABASE_NAME}`, response?.rows?.[0].now)
   })
 }
+app.use(express.json());
 
 app.use(router)
 
