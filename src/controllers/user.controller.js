@@ -38,3 +38,13 @@ exports.createUser = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+exports.signUp = async (req, res) => {
+  await this.createUser(req, res)
+    .then((user) => {
+      res.status(200).json(user)
+    })
+    .catch((error) => {
+      console.error('Error: ', error)
+    })
+}
