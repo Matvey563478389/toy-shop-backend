@@ -54,11 +54,30 @@ exports.signIn = async (req, res) => {
     if (user.rows.length === 0) return res.status(400).json({ message: 'User not found' })
     if (!bcrypt.compare(password, user.rows[0].password)) res.status(400).json({ message: 'Invalid password' })
 
-    const token = jwt.sign({ id: user.rows.id }, process.env.JWT_SECRET, { expiresIn: '24h' })
-
+    const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '24h' });
     res.status(201).json({ message: 'User signed in successfully', token: token})
   } catch (error) {
     console.error('Error: ', error)
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+exports.getMe = async (req, res) => {
+  try {
+    const userId = req.user;
+
+    const result = await pool?.query(
+      'SELECT id, name, email, role, created_at FROM users WHERE id = $1',
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error: ', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
