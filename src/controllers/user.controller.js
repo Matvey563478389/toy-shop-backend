@@ -1,5 +1,6 @@
 const pool = require('../config/db');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 exports.getUsers = async (req, res) => {
  try {
@@ -11,7 +12,7 @@ exports.getUsers = async (req, res) => {
  }
 }
 
-exports.createUser = async (req, res) => {
+exports.signUp = async (req, res) => {
   try {
     const { email, name, password } = req.body;
 
@@ -27,24 +28,19 @@ exports.createUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const result = await pool?.query(
+    const newUser = await pool?.query(
       'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *',
       [name, email, hashedPassword]
     )
 
-    res.status(201).json(result.rows[0])
+    const token = jwt.sign({ id: newUser.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '24h' })
+
+    res.status(201).json({
+        message: 'User created successfully',
+        token: token
+      })
   } catch (error) {
     console.error('Error: ', error)
     res.status(500).json({ message: 'Internal server error' });
   }
-}
-
-exports.signUp = async (req, res) => {
-  await this.createUser(req, res)
-    .then((user) => {
-      res.status(201).json(user)
-    })
-    .catch((error) => {
-      console.error('Error: ', error)
-    })
 }
