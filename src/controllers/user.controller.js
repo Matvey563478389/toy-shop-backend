@@ -35,10 +35,28 @@ exports.signUp = async (req, res) => {
 
     const token = jwt.sign({ id: newUser.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '24h' })
 
-    res.status(201).json({
-        message: 'User created successfully',
-        token: token
-      })
+    res.status(201).json({ message: 'User created successfully', token: token})
+  } catch (error) {
+    console.error('Error: ', error)
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+exports.signIn = async (req, res) => {
+  try {
+    const { email, password } = req.body
+
+    if (!email) res.status(400).json({ message: 'Email is required' });
+    if (!password) res.status(400).json({ message: 'Password is required' });
+
+    const user = await pool?.query('SELECT * FROM users WHERE email = $1', [email])
+
+    if (user.rows.length === 0) return res.status(400).json({ message: 'User not found' })
+    if (!bcrypt.compare(password, user.rows[0].password)) res.status(400).json({ message: 'Invalid password' })
+
+    const token = jwt.sign({ id: user.rows.id }, process.env.JWT_SECRET, { expiresIn: '24h' })
+
+    res.status(201).json({ message: 'User signed in successfully', token: token})
   } catch (error) {
     console.error('Error: ', error)
     res.status(500).json({ message: 'Internal server error' });
