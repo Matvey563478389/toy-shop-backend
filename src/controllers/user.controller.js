@@ -32,7 +32,7 @@ exports.createUser = async (req, res) => {
       [name, email, hashedPassword]
     )
 
-    res.status(200).json(result.rows[0])
+    res.status(201).json(result.rows[0])
   } catch (error) {
     console.error('Error: ', error)
     res.status(500).json({ message: 'Internal server error' });
@@ -42,7 +42,7 @@ exports.createUser = async (req, res) => {
 exports.signUp = async (req, res) => {
   await this.createUser(req, res)
     .then((user) => {
-      res.status(200).json(user)
+      res.status(201).json(user)
     })
     .catch((error) => {
       console.error('Error: ', error)
