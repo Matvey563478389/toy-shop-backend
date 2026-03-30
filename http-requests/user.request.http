@@ -16,8 +16,8 @@ POST http://localhost:3000/api/user/sign-in
 Content-Type: application/json
 
 {
-  "email": "john1@example.com",
-  "password": "securePassword123"
+  "email": "admin@toyshop.com",
+  "password": "admin"
 }
 
 ### Get current user info (Profile)

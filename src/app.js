@@ -14,7 +14,7 @@ if (pool?.query) {
   })
 }
 app.use(express.json());
-
+app.use('/images', express.static('public/images'));
 app.use(router)
 
 app.listen(PORT, () => {

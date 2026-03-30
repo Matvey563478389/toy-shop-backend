@@ -1,0 +1,41 @@
+### Get all toys
+GET http://localhost:3000/api/toys
+
+### Create Toy (Admin only)
+POST http://localhost:3000/api/toys
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNzc0OTAyNTA5LCJleHAiOjE3NzQ5ODg5MDl9.AO7h-kv_DaLd0pR4JSFQfpyjUXARJgPINEIAKfrpu5c
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="title"
+
+Робот Валли
+--boundary
+Content-Disposition: form-data; name="description"
+
+Крутой робот из будущего
+--boundary
+Content-Disposition: form-data; name="price"
+
+2500
+--boundary
+Content-Disposition: form-data; name="image"; filename="robot.jpg"
+Content-Type: image/jpeg
+
+< ./robot.jpg
+--boundary--
+
+### Update Toy
+PUT http://localhost:3000/api/toys/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNzc0OTAyNTA5LCJleHAiOjE3NzQ5ODg5MDl9.AO7h-kv_DaLd0pR4JSFQfpyjUXARJgPINEIAKfrpu5c
+Content-Type: application/json
+
+{
+  "title": "Обновленный Робот",
+  "description": "Теперь он еще круче",
+  "price": 3000
+}
+
+### Delete Toy
+DELETE http://localhost:3000/api/toys/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc0OTAyOTAwLCJleHAiOjE3NzQ5ODkzMDB9.d3CxHYZKbDHRYNQGyvBZ8S83_l-9lsRq9F02REHcPMg

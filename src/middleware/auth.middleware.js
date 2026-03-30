@@ -12,6 +12,7 @@ exports.protect = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
     req.user = decoded.id
+    req.userRole = decoded.role;
     next()
   } catch (error) {
     console.error('Error: ', error)
