@@ -51,15 +51,15 @@ npm run replace-env
 
 Отредактируйте `.env` файл с вашими настройками базы данных и JWT секретом.
 
-### 4. Запуск миграций базы данных
+### 4. Запуск БД И миграций
 
 ```bash
+docker compose up -d --build
 npm run migrate:up
 ```
 
 ### 5. Для заполнения тестовыми данными
 
-Для разработки:
 ```bash
 npm run seed
 ```
@@ -68,7 +68,6 @@ npm run seed
 
 Для разработки:
 ```bash
-docker compose up -d --build
 npm run dev
 ```
 
