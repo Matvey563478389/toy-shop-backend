@@ -8,5 +8,5 @@ exports.up = (pgm) => {
 }
 
 exports.down = (pgm) => {
-  pgm.dropColumn('users', 'created_at')
+  pgm.dropColumn('toys', 'created_at')
 }

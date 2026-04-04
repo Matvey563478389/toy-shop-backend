@@ -6,6 +6,7 @@ const { isAdmin } = require('../middleware/admin.middleware');
 
 userRouter.get('/users', protect, isAdmin, userController.getUsers)
 userRouter.post('/user/sign-up', userController.signUp)
+userRouter.put('/user/profile', protect, userController.updateProfile)
 userRouter.post('/user/sign-in', userController.signIn)
 userRouter.get('/user/me', protect, userController.getMe);
 
