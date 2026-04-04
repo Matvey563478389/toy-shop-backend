@@ -11,6 +11,7 @@ exports.getToys = async (req, res) => {
 
 exports.createToy = async (req, res) => {
   try {
+
     const { title, description, price } = req.body;
     const imageUrl = req.file ? `/images/${req.file.filename}` : null;
 
@@ -30,20 +31,29 @@ exports.updateToy = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, price } = req.body;
-    let query = 'UPDATE toys SET title=$1, description=$2, price=$3';
-    let values = [title, description, price];
+
+    let result;
 
     if (req.file) {
-      query += ', image_url=$4 WHERE id=$5 RETURNING *';
-      values.push(`/images/${req.file.filename}`, id);
+      const imageUrl = `/images/${req.file.filename}`;
+      result = await pool?.query(
+        'UPDATE toys SET title=$1, description=$2, price=$3, image_url=$4 WHERE id=$5 RETURNING *',
+        [title, description, price, imageUrl, id]
+      );
     } else {
-      query += ' WHERE id=$4 RETURNING *';
-      values.push(id);
+      result = await pool?.query(
+        'UPDATE toys SET title=$1, description=$2, price=$3 WHERE id=$4 RETURNING *',
+        [title, description, price, id]
+      );
     }
 
-    const result = await pool?.query(query, values);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Toy not found' });
+    }
+
     res.status(200).json(result.rows[0]);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error updating toy' });
   }
 };
