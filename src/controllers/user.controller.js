@@ -14,7 +14,7 @@ exports.getUsers = async (req, res) => {
 
 exports.signUp = async (req, res) => {
   try {
-    const { email, name, password, address } = req.body;
+    const { email, name, password, address, phone } = req.body;
 
     if (!email) res.status(400).json({ message: 'Email is required' });
     if (!password) res.status(400).json({ message: 'Password is required' });
@@ -29,8 +29,8 @@ exports.signUp = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const newUserResult = await pool?.query(
-      'INSERT INTO users (name, email, password, address) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, email, hashedPassword, address || null]
+      'INSERT INTO users (name, email, password, address, phone) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [name, email, hashedPassword, address || null, phone || null]
     );
 
     const newUser = newUserResult.rows[0];
@@ -54,11 +54,11 @@ exports.signUp = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const userId = req.user;
-    const { name, address } = req.body;
+    const { name, address, phone } = req.body;
 
     const result = await pool?.query(
-      'UPDATE users SET name = $1, address = $2 WHERE id = $3 RETURNING id, name, email, address, role',
-      [name, address, userId]
+      'UPDATE users SET name = $1, address = $2, phone = $3 WHERE id = $4 RETURNING id, name, email, address, phone, role',
+      [name, address, phone, userId]
     );
 
     if (result.rows.length === 0) {
@@ -108,7 +108,7 @@ exports.getMe = async (req, res) => {
     const userId = req.user;
 
     const result = await pool?.query(
-      'SELECT id, name, email, role, address, created_at FROM users WHERE id = $1',
+      'SELECT id, name, email, role, address, phone, created_at FROM users WHERE id = $1',
       [userId]
     );
 
