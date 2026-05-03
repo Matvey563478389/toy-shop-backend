@@ -39,8 +39,9 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_NAME: ${ADMIN_NAME}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    # Каталог из репозитория на хосте (после git pull), не пустой named volume — иначе 404 на /images
     volumes:
-      - toy_images:/app/public/images
+      - ./backend/public/images:/app/public/images
     depends_on:
       db:
         condition: service_healthy
@@ -59,4 +60,3 @@ services:
 
 volumes:
   postgres_data:
-  toy_images:

@@ -31,7 +31,8 @@ app.use(cors({
   credentials: true
 }));
 
-app.use('/images', express.static(path.join(process.cwd(), 'public', 'images')));
+const imagesDir = path.join(__dirname, '..', 'public', 'images');
+app.use('/images', express.static(imagesDir));
 
 app.use((req, res, next) => {
   console.log(`Request: ${req.method} ${req.url}`);
@@ -39,7 +40,6 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-app.use('/images', express.static('public/images'));
 app.use(router)
 
 const HOST = process.env.HOST || '0.0.0.0';
