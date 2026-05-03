@@ -1,4 +1,4 @@
 ../.idea
 node_modules
 .env
-/public/images/
+# Сиды картинок лежат в public/images и коммитятся; выгрузки админки — уникальные имена (timestamp).
