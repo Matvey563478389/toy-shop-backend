@@ -5,6 +5,7 @@ import {
 } from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import api from "../shared/api.js";
+import { assetUrl } from "../shared/assetUrl.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
 import { useNavigate } from "react-router-dom";
@@ -73,7 +74,7 @@ export const CatalogPage = () => {
               <CardMedia
                 component="img"
                 sx={{ height: 220, objectFit: 'cover' }}
-                image={toy.image_url ? `http://localhost:3000${toy.image_url}` : 'https://via.placeholder.com/400x300?text=No+Image'}
+                image={toy.image_url ? assetUrl(toy.image_url) : 'https://via.placeholder.com/400x300?text=No+Image'}
               />
               <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 2 }}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 'bold', minHeight: '2.4em' }}>{toy.title}</Typography>

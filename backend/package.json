@@ -23,6 +23,10 @@
   "author": "Матвей Чебанов",
   "type": "commonjs",
   "main": "src/app.js",
+  "node-pg-migrate": {
+    "migrations-dir": "migrations",
+    "migration-file-language": "js"
+  },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",

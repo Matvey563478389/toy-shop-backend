@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import api from "../../shared/api.js";
+import { assetUrl } from "../../shared/assetUrl.js";
 
 export const AdminToysPage = () => {
   const [toys, setToys] = useState([]);
@@ -107,7 +108,7 @@ export const AdminToysPage = () => {
                 <TableCell>{toy.id}</TableCell>
                 <TableCell>
                   {toy.image_url ? (
-                    <img src={`http://localhost:3000${toy.image_url}`} alt="toy" style={{ width: 50, height: 50, objectFit: 'cover' }} />
+                    <img src={assetUrl(toy.image_url)} alt="toy" style={{ width: 50, height: 50, objectFit: 'cover' }} />
                   ) : "Нет фото"}
                 </TableCell>
                 <TableCell>{toy.title}</TableCell>

@@ -7,6 +7,13 @@ const path = require('path')
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const defaultCorsOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+const extraOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+const allowedOrigins = [...new Set([...defaultCorsOrigins, ...extraOrigins])];
+
 if (pool?.query) {
   pool.query('SELECT NOW()', (error, response) => {
     if (error) console.error(`Error connecting to database ${process.env.DATABASE_NAME}`, error.stack)
@@ -16,7 +23,11 @@ if (pool?.query) {
 }
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: (requestOrigin, callback) => {
+    if (!requestOrigin) return callback(null, true);
+    if (allowedOrigins.includes(requestOrigin)) return callback(null, true);
+    callback(null, false);
+  },
   credentials: true
 }));
 
@@ -31,6 +42,7 @@ app.use(express.json());
 app.use('/images', express.static('public/images'));
 app.use(router)
 
-app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+const HOST = process.env.HOST || '0.0.0.0';
+app.listen(PORT, HOST, () => {
+    console.log(`Server started on http://${HOST}:${PORT}`);
 });

@@ -19,6 +19,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useCart } from "../context/CartContext.jsx";
 import {useAuth} from "../context/AuthContext.jsx";
 import api from "../shared/api.js";
+import { assetUrl } from "../shared/assetUrl.js";
 
 export const CartModal = ({ open, onClose }) => {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
@@ -86,7 +87,7 @@ export const CartModal = ({ open, onClose }) => {
                 <ListItemAvatar>
                   <Avatar
                     variant="rounded"
-                    src={item.image_url ? `http://localhost:3000${item.image_url}` : ''}
+                    src={item.image_url ? assetUrl(item.image_url) : ''}
                     sx={{ width: 60, height: 60, mr: 2 }}
                   />
                 </ListItemAvatar>
