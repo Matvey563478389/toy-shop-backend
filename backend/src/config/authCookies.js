@@ -1,15 +1,16 @@
 const ACCESS_COOKIE = 'access_token';
 const REFRESH_COOKIE = 'refresh_token';
 
-const isProd = process.env.NODE_ENV === 'production';
-
 function baseCookieOptions() {
-  return {
+  const opts = {
     httpOnly: true,
-    secure: process.env.COOKIE_SECURE === 'true' || isProd,
+    secure: process.env.COOKIE_SECURE === 'true',
     sameSite: process.env.COOKIE_SAMESITE || 'lax',
     path: '/',
   };
+  const domain = process.env.COOKIE_DOMAIN?.trim();
+  if (domain) opts.domain = domain;
+  return opts;
 }
 
 function accessTokenMaxAgeMs() {
