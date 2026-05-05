@@ -19,12 +19,15 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
-  }
+  },
 });
 
 const upload = multer({ storage });
 
+router.get('/toys/popular', toyController.getPopularToys);
 router.get('/toys', toyController.getToys);
+router.get('/toys/:id/related', toyController.getRelatedToys);
+router.get('/toys/:id', toyController.getToyById);
 
 router.post('/toys', protect, isAdmin, upload.single('image'), toyController.createToy);
 router.put('/toys/:id', protect, isAdmin, upload.single('image'), toyController.updateToy);

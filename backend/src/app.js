@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const pool = require('./config/db');
 const router = require('./routes')
 const cors = require('cors')
@@ -39,6 +40,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(router)
 

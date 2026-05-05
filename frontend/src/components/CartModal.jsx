@@ -10,69 +10,51 @@ import {
   IconButton,
   Button,
   Divider,
-  Stack
-} from "@mui/material";
+  Stack,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CloseIcon from '@mui/icons-material/Close';
-import { useCart } from "../context/CartContext.jsx";
-import {useAuth} from "../context/AuthContext.jsx";
-import api from "../shared/api.js";
-import { assetUrl } from "../shared/assetUrl.js";
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
+import { assetUrl } from '../shared/assetUrl.js';
+import { formatRub } from '../shared/shopConstants.js';
 
 export const CartModal = ({ open, onClose }) => {
-  const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
+  const navigate = useNavigate();
+  const { cart, updateQuantity, removeFromCart } = useCart();
   const { user } = useAuth();
 
-  const totalSum = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalSum = cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
 
-
-  const handleCreateOrder = async () => {
+  const goCheckout = () => {
     if (!user) {
-      alert("Пожалуйста, войдите в систему, чтобы оформить заказ");
+      alert('Войдите, чтобы оформить заказ');
       return;
     }
-
-    if (!user.address || !user.phone) {
-      alert("Пожалуйста, заполните адрес и телефон в профиле");
-      return;
-    }
-
-    try {
-      const orderData = {
-        items: cart,
-        totalPrice: totalSum,
-        address: user.address,
-        phone: user.phone
-      };
-
-      await api.post('/order', orderData);
-      alert("Заказ успешно оформлен!");
-      clearCart();
-      onClose();
-    } catch (error) {
-      console.error(error);
-      alert("Ошибка при создании заказа");
-    }
+    onClose();
+    navigate('/checkout');
   };
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       <Box sx={{ width: { xs: '100vw', sm: 400 }, p: 3, display: 'flex', flexDirection: 'column', height: '100%' }}>
-
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h5" fontWeight="bold">Корзина</Typography>
-          <IconButton onClick={onClose}><CloseIcon /></IconButton>
+          <Typography variant="h5" fontWeight="bold">
+            Корзина
+          </Typography>
+          <IconButton onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
         </Box>
 
         <Divider />
 
         <List sx={{ flexGrow: 1, overflowY: 'auto', mt: 2 }}>
           {cart.length === 0 ? (
-            <Typography sx={{ textAlign: 'center', mt: 4, color: 'text.secondary' }}>
-              Корзина пуста
-            </Typography>
+            <Typography sx={{ textAlign: 'center', mt: 4, color: 'text.secondary' }}>Корзина пуста</Typography>
           ) : (
             cart.map((item) => (
               <ListItem
@@ -85,18 +67,14 @@ export const CartModal = ({ open, onClose }) => {
                 sx={{ px: 0 }}
               >
                 <ListItemAvatar>
-                  <Avatar
-                    variant="rounded"
-                    src={item.image_url ? assetUrl(item.image_url) : ''}
-                    sx={{ width: 60, height: 60, mr: 2 }}
-                  />
+                  <Avatar variant="rounded" src={item.image_url ? assetUrl(item.image_url) : ''} sx={{ width: 60, height: 60, mr: 2 }} />
                 </ListItemAvatar>
                 <ListItemText
                   primary={item.title}
                   secondary={
                     <Box component="span">
                       <Typography variant="body2" color="primary" fontWeight="bold">
-                        {item.price} ₽
+                        {formatRub(item.price)}
                       </Typography>
                       <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 1 }}>
                         <IconButton size="small" onClick={() => updateQuantity(item.id, -1)}>
@@ -118,20 +96,17 @@ export const CartModal = ({ open, onClose }) => {
         {cart.length > 0 && (
           <Box sx={{ mt: 'auto', pt: 2 }}>
             <Divider sx={{ mb: 2 }} />
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-              <Typography variant="h6">Итого:</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="h6">Товары:</Typography>
               <Typography variant="h6" fontWeight="bold" color="primary">
-                {totalSum} ₽
+                {formatRub(totalSum)}
               </Typography>
             </Box>
-            <Button
-              variant="contained"
-              fullWidth
-              size="large"
-              sx={{ borderRadius: 2 }}
-              onClick={handleCreateOrder}
-            >
-              Оформить заказ
+            <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 2 }}>
+              Доставка и промокод — на странице оформления
+            </Typography>
+            <Button variant="contained" fullWidth size="large" sx={{ borderRadius: 2 }} onClick={goCheckout}>
+              Перейти к оформлению
             </Button>
           </Box>
         )}

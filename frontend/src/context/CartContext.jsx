@@ -1,16 +1,35 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
+import { useAuth } from "./AuthContext.jsx";
 
 const CartContext = createContext();
 
+const CART_STORAGE_KEY = "toy_shop_cart";
+
 export const CartProvider = ({ children }) => {
+  const { user } = useAuth();
+  const prevUserIdRef = useRef(undefined);
+
   const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem("toy_shop_cart");
+    const savedCart = localStorage.getItem(CART_STORAGE_KEY);
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
   useEffect(() => {
-    localStorage.setItem("toy_shop_cart", JSON.stringify(cart));
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
   }, [cart]);
+
+  const clearCart = useCallback(() => {
+    localStorage.removeItem(CART_STORAGE_KEY);
+    setCart([]);
+  }, []);
+
+  useEffect(() => {
+    const id = user?.id ?? null;
+    if (prevUserIdRef.current !== undefined && prevUserIdRef.current !== null && id === null) {
+      clearCart();
+    }
+    prevUserIdRef.current = id;
+  }, [user, clearCart]);
 
   const addToCart = (toy) => {
     setCart((prevCart) => {
@@ -40,8 +59,6 @@ export const CartProvider = ({ children }) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
-  const clearCart = () => setCart([]);
-
   return (
     <CartContext.Provider value={{ cart, addToCart, updateQuantity, removeFromCart, clearCart }}>
       {children}
@@ -49,5 +66,4 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => useContext(CartContext);

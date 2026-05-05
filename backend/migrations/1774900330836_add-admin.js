@@ -10,9 +10,12 @@ exports.up = async (pgm) => {
 
   const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
 
+  const adminName = (ADMIN_NAME && String(ADMIN_NAME).replace(/'/g, "''")) || 'Администратор';
+  const adminEmail = String(ADMIN_EMAIL).replace(/'/g, "''");
+
   pgm.sql(`
     INSERT INTO users (name, email, password, role)
-    VALUES ('${ADMIN_NAME || 'Admin'}', '${ADMIN_EMAIL}', '${hashedPassword}', 'admin')
+    VALUES ('${adminName}', '${adminEmail}', '${hashedPassword}', 'admin')
     ON CONFLICT (email) DO NOTHING;
   `);
 };

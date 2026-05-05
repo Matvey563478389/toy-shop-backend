@@ -9,36 +9,31 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
+      try {
+        const res = await api.get('/user/me');
+        setUser(res.data);
+      } catch {
         try {
+          await api.post('/user/refresh');
           const res = await api.get('/user/me');
           setUser(res.data);
-          // eslint-disable-next-line no-unused-vars
-        } catch (err) {
-          localStorage.removeItem('token');
+        } catch {
+          setUser(null);
         }
       }
       setLoading(false);
     };
-    checkAuth().then(r => r);
+    void checkAuth();
   }, []);
 
   const login = async (email, password) => {
-    const res = await api.post('/user/sign-in', { email, password });
-    const token = res.data.token;
-    localStorage.setItem('token', token);
-
+    await api.post('/user/sign-in', { email, password });
     const userRes = await api.get('/user/me');
     setUser(userRes.data);
   };
 
   const register = async (userData) => {
-    const res = await api.post('/user/sign-up', userData);
-    const token = res.data.token;
-
-    localStorage.setItem('token', token);
-
+    await api.post('/user/sign-up', userData);
     const userRes = await api.get('/user/me');
     setUser(userRes.data);
   };
@@ -49,8 +44,12 @@ export const AuthProvider = ({ children }) => {
     return res.data;
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
+  const logout = async () => {
+    try {
+      await api.post('/user/logout');
+    } catch {
+      void 0;
+    }
     setUser(null);
   };
 
@@ -61,5 +60,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

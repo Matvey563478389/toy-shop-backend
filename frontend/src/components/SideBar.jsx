@@ -13,16 +13,14 @@ import {
   CircularProgress
 } from "@mui/material";
 
-import ViewListIcon from '@mui/icons-material/ViewList';
 import DvrIcon from '@mui/icons-material/Dvr';
-import HomeIcon from "@mui/icons-material/Home";
-import InfoIcon from "@mui/icons-material/Info";
-import AppsIcon from '@mui/icons-material/Apps';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import PeopleIcon from '@mui/icons-material/People';
 import CategoryIcon from '@mui/icons-material/Category';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { ProfileModal } from "./ProfileModal.jsx";
@@ -56,45 +54,19 @@ export const SideBar = () => {
       >
         <Box sx={{ p: 2 }}>
           <Typography variant="h6" fontWeight="bold">
-            Магазин игрушек
+            Админ-панель
           </Typography>
+          <Button size="small" variant="outlined" onClick={() => navigate("/")} sx={{ mt: 1 }} fullWidth>
+            На витрину
+          </Button>
         </Box>
         <Divider />
 
-        <List>
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => navigate("/")}>
-              <ListItemIcon><HomeIcon /></ListItemIcon>
-              <ListItemText primary="Главная" />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => navigate("/catalog")}>
-              <ListItemIcon><AppsIcon /></ListItemIcon>
-              <ListItemText primary="Каталог" />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => navigate("/orders")}>
-              <ListItemIcon><ViewListIcon /></ListItemIcon>
-              <ListItemText primary="Мои заказы" />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => navigate("/about")}>
-              <ListItemIcon><InfoIcon /></ListItemIcon>
-              <ListItemText primary="О нас" />
-            </ListItemButton>
-          </ListItem>
-
+        <List sx={{ flex: 1 }}>
           {user?.role === 'admin' && (
             <>
-              <Divider sx={{ my: 1 }} />
-              <Typography variant="caption" sx={{ px: 2, color: 'text.secondary' }}>
-                АДМИН ПАНЕЛЬ
+              <Typography variant="caption" sx={{ px: 2, py: 1, display: 'block', color: 'text.secondary' }}>
+                Управление
               </Typography>
               <ListItem disablePadding>
                 <ListItemButton onClick={() => navigate("/admin/users")}>
@@ -109,23 +81,33 @@ export const SideBar = () => {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
+                <ListItemButton onClick={() => navigate("/admin/categories")}>
+                  <ListItemIcon><FolderOpenIcon /></ListItemIcon>
+                  <ListItemText primary="Категории" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
                 <ListItemButton onClick={() => navigate("/admin/orders")}>
                   <ListItemIcon><DvrIcon /></ListItemIcon>
-                  <ListItemText primary="Управление заказами" />
+                  <ListItemText primary="Заказы" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton onClick={() => navigate("/admin/promo")}>
+                  <ListItemIcon><LocalOfferIcon /></ListItemIcon>
+                  <ListItemText primary="Промокоды" />
                 </ListItemButton>
               </ListItem>
             </>
           )}
         </List>
 
-        <Box sx={{ flexGrow: 1 }} />
-
         <Divider />
         <Box sx={{ p: 2 }}>
           {user ? (
             <Box>
               <Box
-                onClick={() => setIsProfileModalOpen(true)} // Открываем модалку по клику
+                onClick={() => setIsProfileModalOpen(true)}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',

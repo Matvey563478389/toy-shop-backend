@@ -32,8 +32,7 @@ export const ProfileModal = ({ open, handleClose }) => {
     try {
       await updateProfile(data.name, data.address, data.phone);
       handleClose();
-      // eslint-disable-next-line no-unused-vars
-    } catch (e) {
+    } catch {
       alert("Ошибка обновления");
     }
   };
