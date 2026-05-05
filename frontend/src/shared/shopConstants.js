@@ -2,7 +2,7 @@ export const BRAND_NAME = 'ToyShop';
 
 export const DEFAULT_CATEGORY_SLUG = 'razvivayushchie';
 
-export const SHOP_ADDRESS_LINE = '344000, г. Ростов-на-Дону, ул. Каширская, д. 4/2';
+export const SHOP_ADDRESS_LINE = '344091, г. Ростов-на-Дону, ул. Каширская, д. 4/2';
 
 export const SHOP_PHONE_DISPLAY = '+7 (988) 516-27-43';
 export const SHOP_PHONE_TEL = '+79885162743';

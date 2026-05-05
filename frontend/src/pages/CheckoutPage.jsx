@@ -39,10 +39,10 @@ export const CheckoutPage = () => {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [postalCode, setPostalCode] = useState('344000');
-  const [city, setCity] = useState('Ростов-на-Дону');
-  const [street, setStreet] = useState('ул. Каширская');
-  const [building, setBuilding] = useState('4/2');
+  const [postalCode, setPostalCode] = useState('');
+  const [city, setCity] = useState('');
+  const [street, setStreet] = useState('');
+  const [building, setBuilding] = useState('');
   const [phoneDisplay, setPhoneDisplay] = useState(() =>
     user?.phone ? formatRuPhoneMask(user.phone) : ''
   );

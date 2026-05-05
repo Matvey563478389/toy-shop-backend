@@ -88,15 +88,38 @@ export const ContactPage = () => {
           ))}
         </Stack>
 
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>
-          <Paper sx={{ flex: 1, borderRadius: 3, overflow: 'hidden', minHeight: 360 }}>
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} alignItems="stretch">
+          <Paper
+            sx={{
+              flex: 1,
+              borderRadius: 3,
+              overflow: 'hidden',
+              alignSelf: 'stretch',
+            }}
+          >
             <Box
-              component="iframe"
-              title="Карта"
-              sx={{ border: 0, width: '100%', height: 400 }}
-              loading="lazy"
-              src="https://www.google.com/maps?q=ул.+Каширская,+4%2F2,+Ростов-на-Дону,+Россия&hl=ru&z=17&output=embed"
-            />
+              sx={{
+                position: 'relative',
+                width: '100%',
+                aspectRatio: { xs: '4 / 3', md: '16 / 11' },
+                minHeight: { xs: 240, sm: 280 },
+              }}
+            >
+              <Box
+                component="iframe"
+                title="Карта"
+                loading="lazy"
+                src="https://www.google.com/maps?q=ул.+Каширская,+4%2F2,+Ростов-на-Дону,+Россия&hl=ru&z=17&output=embed"
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  border: 0,
+                  display: 'block',
+                }}
+              />
+            </Box>
           </Paper>
           <Paper sx={{ flex: 1, p: 3, borderRadius: 3 }}>
             <Typography variant="h6" fontWeight={800} gutterBottom>
